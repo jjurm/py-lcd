@@ -19,6 +19,9 @@ lcd = CharLCD(pin_rs=25, pin_e=24, pins_db=[6, 13, 19, 26, 12, 16, 20, 21], four
 # OR 4bit mode
 lcd = CharLCD(pin_rs=25, pin_e=24, pins_db=[12, 16, 20, 21], fourbitmode=True, GPIO=GPIO)
 
+# optional constructor arguments:
+#   pin_backlight    Pin for controlling lcd backlight
+
 # start initialization
 lcd.begin(cols=16, rows=2)
 
@@ -54,5 +57,8 @@ lcd.write("\0x00")
 
 # rewrite entire line
 lcd.wline(line=0, string="Hello \0x00")
+
+# turn backlight on and off (if set up)
+lcd.setBackLight(True)
 ```
 

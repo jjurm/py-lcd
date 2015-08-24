@@ -61,7 +61,7 @@ class CharLCD:
 	BITMODE_4BIT = 0
 
 
-	def __init__(self, pin_rs, pin_e, pins_db, fourbitmode, GPIO, pin_reset=None):
+	def __init__(self, pin_rs, pin_e, pins_db, fourbitmode, GPIO, pin_backlight=None, pin_reset=None):
 
 		# === Default configuration ===
 
@@ -98,6 +98,12 @@ class CharLCD:
 			self.GPIO.setup(self.pins_db[-pins + i], self.GPIO.OUT)
 
 		self.GPIO.output(self.pin_e, self.LOW)
+
+		# Backlight pin
+		self.pin_backlight = pin_backlight
+		if self.pin_backlight is not None:
+			self.GPIO.setup(self.pin_backlight, self.GPIO.OUT)
+			self.GPIO.output(self.pin_backlight, self.LOW)
 
 		# Reset pin
 		self.pin_reset = pin_reset
@@ -305,6 +311,10 @@ class CharLCD:
 			self.GPIO.output(self.pin_reset, self.LOW)
 			self.delayMicroseconds(microseconds)
 			self.GPIO.output(self.pin_reset, self.HIGH)
+
+	def setBackLight(self, on):
+		if self.pin_backlight is not None:
+			self.GPIO.output(self.pin_backlight, on)
 
 	def write(self, string):
 		''' Writes string char by char '''
