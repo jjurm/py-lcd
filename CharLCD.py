@@ -5,11 +5,6 @@
 #
 # by JJurM
 #
-# based on sources:
-# 	http://esd.cs.ucr.edu/labs/interface/interface.html
-# 	https://github.com/arduino/Arduino/tree/master/libraries/LiquidCrystal
-# 	https://github.com/adafruit/Adafruit-Raspberry-Pi-Python-Code/blob/master/Adafruit_CharLCD/Adafruit_CharLCD.py
-#
 
 from time import sleep
 
@@ -61,7 +56,9 @@ class CharLCD:
 	BITMODE_4BIT = 0
 
 
-	def __init__(self, pin_rs, pin_e, pins_db, fourbitmode, GPIO, pin_backlight=None, pin_reset=None):
+	def __init__(self, pin_rs=25, pin_e=24, pins_db=[12, 16, 20, 21],
+					   pin_backlight=None, pin_reset=None, 
+					   cols=16, rows=2, dotsize=None):
 
 		# === Default configuration ===
 
@@ -84,12 +81,22 @@ class CharLCD:
 		self.pin_e = pin_e
 		self.pins_db = pins_db
 
-		if fourbitmode is not None:
-			self.bitmode = (self.BITMODE_4BIT if fourbitmode else self.BITMODE_8BIT)
+		if len(self.pins_db) < 8:
+			self.bitmode = self.BITMODE_4BIT
+
+		self.cols = cols
+		self.rows = rows
+		if dotsize == None:
+			dotsize = self.DOTSIZE_5x7DOTS
+		self.dotsize = dotsize
+		self.multiline = (self.MULTILINE_2LINE if rows >= 2 else self.MULTILINE_1LINE)
 
 		# === GPIO ===
+		import RPi.GPIO as GPIO
 		self.GPIO = GPIO
+
 		self.GPIO.setmode(self.GPIO.BCM)
+		self.GPIO.setwarnings(False)
 
 		self.GPIO.setup(self.pin_e, self.GPIO.OUT)
 		self.GPIO.setup(self.pin_rs, self.GPIO.OUT)
@@ -112,18 +119,8 @@ class CharLCD:
 			self.GPIO.output(self.pin_reset, self.HIGH)
 			self.delayMicroseconds(20000)
 
-	def begin(self, cols, rows, dotsize=None):
-		''' Inicializes display and begins communication '''
-		# store given numbers
-		self.cols = cols
-		self.rows = rows
-		
-		if dotsize == None:
-			dotsize = self.DOTSIZE_5x7DOTS
-		self.dotsize = dotsize
-		self.multiline = (self.MULTILINE_2LINE if rows >= 2 else self.MULTILINE_1LINE)
+		# === Inicialization ===
 
-		# 
 		if self.bitmode == self.BITMODE_8BIT:
 			# 8bit mode
 
