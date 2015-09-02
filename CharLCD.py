@@ -57,7 +57,7 @@ class CharLCD:
 
 
 	def __init__(self, pin_rs=25, pin_e=24, pins_db=[12, 16, 20, 21],
-					   pin_backlight=None, pin_reset=None, 
+					   pin_backlight=None,
 					   cols=16, rows=2, dotsize=None):
 
 		# === Default configuration ===
@@ -111,13 +111,6 @@ class CharLCD:
 		if self.pin_backlight is not None:
 			self.GPIO.setup(self.pin_backlight, self.GPIO.OUT)
 			self.GPIO.output(self.pin_backlight, self.LOW)
-
-		# Reset pin
-		self.pin_reset = pin_reset
-		if self.pin_reset is not None:
-			self.GPIO.setup(self.pin_reset, self.GPIO.OUT)
-			self.GPIO.output(self.pin_reset, self.HIGH)
-			self.delayMicroseconds(20000)
 
 		# === Inicialization ===
 
@@ -301,13 +294,6 @@ class CharLCD:
 				self.data(bytemap[i])
 			else:
 				self.data(0x00)
-
-	def reset(self, microseconds=100000):
-		''' Shorts reset pin to GND for specified number of microseconds (to reset the display) '''
-		if self.pin_reset is not None:
-			self.GPIO.output(self.pin_reset, self.LOW)
-			self.delayMicroseconds(microseconds)
-			self.GPIO.output(self.pin_reset, self.HIGH)
 
 	def setBackLight(self, on):
 		if self.pin_backlight is not None:
