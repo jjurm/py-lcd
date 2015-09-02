@@ -119,11 +119,11 @@ class CharLCD:
 
 			# initialisation sequence of 3 function set commands
 			self.pushFunctionSet()
-			self.delayMicroseconds(4500) # wait > 4.1ms
+			self.msleep(4.5) # wait > 4.1ms
 
 			# second attempt
 			self.pushFunctionSet()
-			self.delayMicroseconds(150) # wait > 100us
+			self.usleep(150) # wait > 100us
 
 			# third attempt
 			self.pushFunctionSet()
@@ -133,11 +133,11 @@ class CharLCD:
 
 			# initialisation starts in 8bit mode
 			self.write4bits(0x03)
-			self.delayMicroseconds(4500) # wait > 4.1ms
+			self.msleep(4.5) # wait > 4.1ms
 
 			# second attempt
 			self.write4bits(0x03)
-			self.delayMicroseconds(150) # wait > 100us
+			self.usleep(150) # wait > 100us
 
 			# third attempt
 			self.write4bits(0x03)
@@ -160,18 +160,22 @@ class CharLCD:
 			val = minimum
 		return val
 
-	def delayMicroseconds(self, microseconds):
+	def msleep(self, milliseconds):
+		''' Sleeps for specified number of milliseconds '''
+		sleep(milliseconds / float(1000))
+
+	def usleep(self, microseconds):
 		''' Sleeps for specified number of microseconds '''
 		sleep(microseconds / float(1000000))
 
 	def pulseEnable(self):
 		''' Makes standard short pulse on Enable pin '''
 		self.GPIO.output(self.pin_e, False)
-		self.delayMicroseconds(10)       # 1 microsecond pause - enable pulse must be > 450ns
+		self.usleep(10)       # enable pulse must be > 450ns
 		self.GPIO.output(self.pin_e, True)
-		self.delayMicroseconds(10)       # 1 microsecond pause - enable pulse must be > 450ns
+		self.usleep(10)       # enable pulse must be > 450ns
 		self.GPIO.output(self.pin_e, False)
-		self.delayMicroseconds(100)      # commands need > 37us to settle
+		self.usleep(100)      # commands need > 37us to settle
 
 	def writeBits(self, bits, value):
 		''' Writes specific number of bits of value and makes pulse '''
