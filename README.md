@@ -54,5 +54,8 @@ lcd.wline(line=0, string="Hello \x00")
 
 # turn backlight on and off (if set up)
 lcd.setBackLight(True)
+
+# and finally close communication (also clear display)
+lcd.close(clear=True)
 ```
 

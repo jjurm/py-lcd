@@ -237,6 +237,11 @@ class CharLCD:
 		''' Returns cursor home '''
 		self.command(self.CMD_RETURNHOME)
 
+	def close(self, clear=False):
+		if clear:
+			self.clear()
+		self.GPIO.cleanup()
+
 	def moveCursor(self, col=0, row=0):
 		''' Moves cursor to specified position '''
 		col = self.toRange(col, 0, self.cols)
