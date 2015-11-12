@@ -244,8 +244,8 @@ class CharLCD:
 
 	def moveCursor(self, col=0, row=0):
 		''' Moves cursor to specified position '''
-		col = self.toRange(col, 0, self.cols)
-		row = self.toRange(row, 0, self.rows)
+		col = self.toRange(col, 0, self.cols - 1)
+		row = self.toRange(row, 0, self.rows - 1)
 		offsets = [0x00, 0x40, 0x00 + self.cols, 0x40 + self.cols]
 		self.command(self.CMD_SETDDRAMADDR | (offsets[row] + col))
 
